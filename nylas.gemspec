@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.license = "MIT"
 
   # Runtime dependencies
+  gem.add_runtime_dependency "base64"
   gem.add_runtime_dependency "mime-types", "~> 3.5", ">= 3.5.1"
   gem.add_runtime_dependency "ostruct", "~> 0.6"
   gem.add_runtime_dependency "rest-client", ">= 2.0.0", "< 3.0"

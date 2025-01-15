@@ -251,6 +251,22 @@ describe Nylas::HttpClient do
       expect(err_obj.type).to eq("api_error")
     end
 
+    it "raises NylasApiError if the error response is a string" do
+      response = {
+        request_id: "request-id",
+        error: "Bad Gateway"
+      }
+
+      err_obj = http_client.send(:error_hash_to_exception, response, 502, "https://test.api.nylas.com/foo")
+
+      expect(err_obj).to be_a(Nylas::NylasApiError)
+      expect(err_obj.message).to eq("Bad Gateway")
+      expect(err_obj.request_id).to eq("request-id")
+      expect(err_obj.provider_error).to eq(nil)
+      expect(err_obj.status_code).to eq(502)
+      expect(err_obj.type).to eq("NylasApiError")
+    end
+
     it "raises the correct error for OAuth" do
       response = {
         error: "invalid_request",

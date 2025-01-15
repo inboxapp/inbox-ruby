@@ -198,10 +198,24 @@ module Nylas
 
     def throw_error(response, status_code)
       error_obj = response[:error]
-      provider_error = error_obj.fetch(:provider_error, nil)
 
-      NylasApiError.new(error_obj[:type], error_obj[:message], status_code, provider_error,
-                        response[:request_id])
+      # If `error_obj` is just a string, turn it into a hash with default keys.
+      if error_obj.is_a?(String)
+        error_obj = {
+          type: "NylasApiError",
+          message: error_obj
+        }
+      end
+
+      provider_error = error_obj.fetch(:provider_error, nil) if error_obj.is_a?(Hash)
+
+      NylasApiError.new(
+        error_obj[:type],
+        error_obj[:message],
+        status_code,
+        provider_error,
+        response[:request_id]
+      )
     end
 
     # Adds query parameters to a URL.
